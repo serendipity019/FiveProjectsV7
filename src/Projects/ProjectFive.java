@@ -6,6 +6,7 @@ public class ProjectFive {
     static Boolean[][] theaterTable= new Boolean[30][12];
     public static void main(String[] args) {
         int bookOrCancel = 0;
+        Scanner sc = new Scanner(System.in);
 
         //Arxikopoioume ton pinaka me falses
         for (int i = 0; i < theaterTable.length; i++) {
@@ -15,7 +16,7 @@ public class ProjectFive {
         }
 
         do {
-            try (Scanner sc = new Scanner(System.in)) {
+            try {
                 System.out.println("Αν θέλετε να κάνετε κράτηση επιλέξτε 1\n" + "Αν θέλετε να κάνετε ακύρωση επιλέξτε 2.");
                 bookOrCancel = sc.nextInt();
 
@@ -25,18 +26,18 @@ public class ProjectFive {
         } while (bookOrCancel != 1 && bookOrCancel != 2);
 
 
-        char column = ' ';
-        int row = 0;
+        char column = 'A';
+        int row = 1;
         String seat;
-        do {
-            try (Scanner sc = new Scanner(System.in)) {
+        while (true) {
+            try {
                 System.out.println("Επιλέξτε θέση απο A εώς L (Αγγλικοί κεφαλαίοι χαρακτήρες) για στήλη και απο 1 εώς 30 για την σειρά. ");
                 System.out.println("π.χ για 3η στήλη, 2η σειρά εισάγετε C2.");
-                seat = sc.nextLine();
-                if (seat.length() != 2) {
+                seat = sc.nextLine().trim().toUpperCase();
+                if (seat.length() < 2 || seat.length() > 3) {
                     throw new IllegalArgumentException("Δεν εισάγατε κατάληλη θέση, προσπαθήστε ξανά!");
                 }
-                column = Character.toUpperCase(seat.charAt(0));
+                column = seat.charAt(0);
                 row = Character.getNumericValue(seat.charAt(1));
                 if ((column > 'L') || (column < 'A') || (row > 30 || row < 1)) {
                     throw new IllegalArgumentException("Δεν εισάγατε κατάληλη θέση, προσπαθήστε ξανά!");
@@ -49,7 +50,7 @@ public class ProjectFive {
             }catch (Exception e) {
                 System.err.println("Ουπς κάτι πήγε στραβά! " + e.getMessage());
             }
-        } while (true);
+        }
 
         if (bookOrCancel == 1) {
             book(column, row);
@@ -59,6 +60,7 @@ public class ProjectFive {
 
 
        // doubleTablePrinter(theaterTable);
+        sc.close();
     }
 
 
