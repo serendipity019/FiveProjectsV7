@@ -24,7 +24,7 @@ public class ProjectFive {
                 System.err.println("Εισάγετε αριθμό. 1 για κράτηση ή 2 για ακύρωση θέσης");
             }
         } while (bookOrCancel != 1 && bookOrCancel != 2);
-
+        sc.nextLine(); // katharizo ton buffer tis Scanner
 
         char column = 'A';
         int row = 1;
@@ -38,7 +38,12 @@ public class ProjectFive {
                     throw new IllegalArgumentException("Δεν εισάγατε κατάληλη θέση, προσπαθήστε ξανά!");
                 }
                 column = seat.charAt(0);
-                row = Character.getNumericValue(seat.charAt(1));
+                if (seat.length() == 3){
+                String sRow = seat.substring(1,3);
+                row = Integer.parseInt(sRow);
+                } else {
+                    row = Character.getNumericValue(seat.charAt(1));
+                }
                 if ((column > 'L') || (column < 'A') || (row > 30 || row < 1)) {
                     throw new IllegalArgumentException("Δεν εισάγατε κατάληλη θέση, προσπαθήστε ξανά!");
 
@@ -68,18 +73,18 @@ public class ProjectFive {
 
     private static void book(char column, int row){
         int colNum = column % 65;
-        if (theaterTable[colNum][row-1]) {
+        if (theaterTable[row-1][colNum]) {
             System.out.println("η θέση: "+ column + row + " είναι κλεισμένη." );
         } else {
-            theaterTable[colNum][row - 1] = true;
+            theaterTable[row-1][colNum] = true;
             System.out.println("η θέση: "+ column + row + " έκλεισε επιτυχώς." );
         }
     }
 
     private static void cancel(char column, int row){
         int colNum = column % 65;
-        if (theaterTable[colNum][row-1]) {
-            theaterTable[colNum][row-1] = false;
+        if (theaterTable[row-1][colNum]) {
+            theaterTable[row-1][colNum] = false;
             System.out.println("η θέση: "+ column + row + " ακυρώθηκε επιτυχώς." );
         } else {
             System.out.println("η θέση: "+ column + row + " δεν είναι κλεισμένη. Δοκιμάστε ξανά!" );
