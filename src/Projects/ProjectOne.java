@@ -16,7 +16,7 @@ public class ProjectOne {
         File inputFile = new File(inFilePath);
         File outputFile = new File(outFilePath);
         ArrayList<Integer> numbers = readFile(inputFile); // Δημιουργώ την λίστα αριθμών με την μέθοδο readFile.
-        //int [] array = {1, 25, 14, 45, 23, 2, 3, 12, 28, 31, 33, 36, 44, 43, 16, 11, 7, 5};
+        //int [] array = {1, 25, 14, 45, 23, 2, 3, 12, 28, 31, 33, 36, 44, 43, 16, 11, 7, 5}; //Dokimastiki
 
         // Εδώ καλώ την μέθοδο για να κάνω την ArrayList<Integer> σε int[]
         int[] intNum = convArrayListToIntArr(numbers);
@@ -96,7 +96,7 @@ public class ProjectOne {
         return (count != 0) ; //επιστρέφει true αν δεν είναι πάνω 2 απο συνεχείς.
     }
 
-    //Kano mia methodo gia tin taksinomisi. methodos thisalida
+    //Kano mia methodo gia tin taksinomisi. methodos fisalida
     public static void sort(int[] array){
         for (int i = array.length - 1; i > 0; i--) {
             for (int j = 0; j < i; j++) {
