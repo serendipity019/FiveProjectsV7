@@ -14,7 +14,7 @@ public class ProjectFive {
                 theaterTable[i][j] = false;
             }
         }
-
+        // Προσθέτω ένα έξτρα βήμα για έλεγχο επιλογής.
         do {
             try {
                 System.out.println("Αν θέλετε να κάνετε κράτηση επιλέξτε 1\n" + "Αν θέλετε να κάνετε ακύρωση επιλέξτε 2.");
@@ -25,6 +25,9 @@ public class ProjectFive {
             }
         } while (bookOrCancel != 1 && bookOrCancel != 2);
         sc.nextLine(); // katharizo ton buffer tis Scanner
+
+        /*Σε αυτό το βήμα κάνω έλεγχο αν η θέση που δίνει είναι σε κατάλληλη μορφή.
+        * και αν ναι ελέγχω και αν είναι εντός ορίων. */
 
         char column = 'A';
         int row = 1;
@@ -56,7 +59,7 @@ public class ProjectFive {
                 System.err.println("Ουπς κάτι πήγε στραβά! " + e.getMessage());
             }
         }
-
+        // Κατευθύνω για κράτηση ή ακύρωση.
         if (bookOrCancel == 1) {
             book(column, row);
         } else{
