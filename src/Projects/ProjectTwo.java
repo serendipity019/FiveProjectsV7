@@ -1,25 +1,100 @@
 package Projects;
 
+/**
+ * Το παρακάτω πρόγραμμα δέχετε ακέραιες τιμές απο τον πίνακα arr, και υπολογίζει το
+ * μέγιστο άθροισμα. Χρησιμοποιεί αυτό το άθροισμα για να εμφανίσει τον συνεχόμενο υποπίνακα
+ * που δίνει αυτό το άθροισμα.
+ */
+
+/*
+Γ ερώτημα: Η πολυπλοκότητα χρόνου είναι Ο(n) γιατί για την εύρεση του μεγίστου στην main
+ * τρέχουμε μία for που υπολογίζει τα τοπικά μέγιστα, το ολικό μέγιστο, και κρατάει επίσης την
+ * θέση που βρίσκετε αυτό. Για την ακρίβεια αυτήν η for είναι Ο(n-1). 'Επειτα για να
+ * εμφανίσει τον υποπίνακα τρέχουμε μία μέθοδο για να βρούμε το σημείο αρχής και το σημείο
+ * που τελειώνει ο υποπίνακας, η οποία και αυτήν είναι στην χειρότερη Ο(n). Αυτήν καλή μία μέθοδο
+ * για να εκτυπώσει τον υποπίνακα, η οποία και αυτήν στην χειρότερη θα έχει χρονική πολυπλοκότητα
+ * Ο(n). Αρα το πρόγραμμα συνολικά έχει πολυπλοκότητα Ο(n).
+ */
 public class ProjectTwo {
     public static void main(String[] args) {
         int[] arr = {-2, 1, -3, 4, -1, 2, 1, -5, 4};
-        int[] locMax = new int[arr.length];
-        int[] subArray;
+        int[] locMax = new int[arr.length]; //Αρχικοποιώ το τοπικό μέγιστο να έχει τόσες θέσεις όσες και ο αρχικός πίνκας.
+        int sumMax = arr[0]; // Θέτω το ολικό μέγιστο ίσο με το πρώτο στοιχείο του πίνακα.
 
-        locMax[0]=arr[0];
+        locMax[0]=arr[0]; // Θέτω το τοπικό μέγιστο ίσο με το πρώτο στοιχείο του πίνακα.
+        int index = 0;
         for( int i = 1; i< arr.length; i++) {
+            //Χρησιμοποιόντας δυναμικό προγραμματισμό κάνω τις συγκρίσεις.
             locMax[i] = Math.max((locMax[i-1]+arr[i]),arr[i]);
-            if (){
-                //emeina sto seimio pou psaxno na bro pos tha vriskei ton ypopinaka
+            if (locMax[i] > sumMax){
+                sumMax = locMax[i]; // Κρατάμε την τιμή του ολικού μέγιστου του αθροίσματος.
+                index = i; // Στο τέλος αυτό θα δείχνει το σημείο που βρίσκεται το ολικό μέγιστο του πίνακα.
             }
         }
 
-        printTable(locMax);
+        //printTable(locMax); // Δοκιμαστικά εμφανίζω τον πίνακα με τις μέγιστες τιμές.
+
+        /*
+         * Καλώ την παρακάτω μέθοδο για να βρώ την αρχή και το τέλος του υποπίνακα
+         * για να τον εμφανίσουμε με την σωστή σειρά και όχι αντίστροφα.
+         */
+        startEndIndex(arr,index,locMax[index]);
     }
 
+    //Απλή μέθοδος εμφάνισης ακέραιου πίνακα.
     public static void printTable(int[] array){
         for (int el : array){
             System.out.print(el + " ");
         }
+        System.out.println();
+    }
+
+    /**
+     * Αυτήν η μέθοδος χρησιμεύει για να βρούμε την αρχή και το τέλος του υποπίνακα.
+     * Στην main βρίσκουμε το μέγιστο άθροισμα και σε ποιό σημείο του array δημιουργείτε,
+     * δηλ. ξέρουμε το τέλος του υποπίνακα. Σε αυτήν την μέθοδο πηγαίνοντας πρός τα πίσω
+     * χρησιμοποιώ την sum για να βρώ απο πού ξεκινάει αυτό το μέγιστο άθροισμα, και γιαυτόν
+     * τον λόγο αφαιρώ απο την sum τους αριθμούς μέχρι να έχω sum = 0, άρα και την αρχή που
+     * αθροίζει ο υποπίνακας.
+     * @param array Ο πίνακας με τους αριθμούς.
+     * @param index Η θέση στον παραπάνω πίνακα στην οποία έχουμε το μέγιστο άθροισμα.
+     * @param sum Το μέγιστο άθροισμα.
+     */
+    public static void startEndIndex(int[] array, int index, int sum) throws IndexOutOfBoundsException {
+        int startIndex = 0;
+        int endIndex = index;
+        if (index > array.length || index < 0){
+            throw new IndexOutOfBoundsException("Δώσατε σημείο εισόδου εκτός του πίνακα");
+        } else {
+            while (sum > 0 && index >= 0) {
+                //System.out.println();
+                sum -= array[index];
+                //System.out.println("The sum is: " + sum);
+                index--;
+                //System.out.println("The index is: " + index);
+            }
+            startIndex = index + 1; // +1 γιατί όταν θα βγεί απο την while θα έχει κάνει πριν --.
+
+            // Καλούμε την παρακάτω μέθοδο για να εμφανίσουμε τον υποπίνακα.
+            printSubTable(array, startIndex, endIndex);
+        }
+    }
+
+    /**
+     * Αυτήν η μέθοδος εμφανίζει τον υποπίνακα με το μέγιστο άθροισμα.
+     * @param array Ο πίνακας με τους αριθμούς.
+     * @param startIndex Το σημείο έναρξης της εκτύπωσης του υποπίνακα.
+     * @param endIndex Το σημείο λήξης του υποπίνακα.
+     */
+    public static void printSubTable(int[]array, int startIndex, int endIndex){
+        System.out.print("Ο υποπίνακας που δίνει το μέγιστο άθροισμα είναι ο: {");
+        for (int i = startIndex; i <= endIndex; i++) {
+
+            if (i != endIndex) {System.out.print(array[i] + ", ");
+            } else {
+                System.out.print(array[i]);
+            }
+        }
+        System.out.print("}\n");
     }
 }
