@@ -1,20 +1,32 @@
 package Projects;
 
+/**
+ * Αυτό το προγραμματάκι διαβάζει απο ένα αρχείο που περιέχει απο 6 εώς 49 αριθμούς.
+ * Το έχω στην μορφή (1 5 6 9 24 34) δίχως κόμμα ανάμεσα τους.
+ * Δημιουργεί συνδιασμούς των 6 και αν πληρούντε κάποια κριτίρια
+ * τους εκτυπώνει σε ένα αρχείο .txt .
+ */
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ProjectOne {
 
-
-
     public static void main(String[] args) throws Exception {
-        String inFilePath = "~/coding-factory/'java exercises'/FiveProjectsV7/files/six_Number.txt";
-        String outFilePath = "~/coding-factory/'java exercises'/FiveProjectsV7/files/six_NumberOutput.txt";
+        String homeDir = System.getProperty("user.home");
+        String inFilePath =homeDir + "/coding-factory/java exercises/FiveProjectsV7/files/six_Numbers.txt";
+        String outFilePath =homeDir + "/coding-factory/java exercises/FiveProjectsV7/files/six_NumbersOutput.txt";
         File inputFile = new File(inFilePath);
         File outputFile = new File(outFilePath);
+
+        if (!inputFile.exists()){
+            System.err.println("Το αρχείο εισόδου δεν υπάρχει: " + inputFile.getAbsolutePath());
+            return;
+        }
         ArrayList<Integer> numbers = readFile(inputFile); // Δημιουργώ την λίστα αριθμών με την μέθοδο readFile.
         //int [] array = {1, 25, 14, 45, 23, 2, 3, 12, 28, 31, 33, 36, 44, 43, 16, 11, 7, 5}; //Dokimastiki
 
@@ -139,13 +151,13 @@ public class ProjectOne {
      */
     private static void combinations(int[] array, File outputFile){
         final int n = 6; // edo simaini sundiasmoi 6 arithmon
-        int[] sixNumbers = new int[6];
-        for (int i = 0; i <= array.length - n; i++) {
-            for (int j = 0; j <= array.length - n + 1; j++) {
-                for (int k = 0; k <= array.length - n + 2; k++) {
-                    for (int l = 0; l <= array.length - n + 3; l++) {
-                        for (int m = 0; m <= array.length - n + 4; m++) {
-                            for (int o = 0; o <= array.length - n + 5; o++) {
+        int[] sixNumbers = new int[n];
+        for (int i = 0; i < array.length - n + 1; i++) {
+            for (int j = i + 1; j < array.length - n + 2; j++) {
+                for (int k = j +1; k < array.length - n + 3; k++) {
+                    for (int l = k + 1; l < array.length - n + 4; l++) {
+                        for (int m = l + 1; m < array.length - n + 5; m++) {
+                            for (int o = m + 1; o < array.length; o++) {
                                 sixNumbers[0] = array[i];
                                 sixNumbers[1] = array[j];
                                 sixNumbers[2] = array[k];
@@ -157,7 +169,7 @@ public class ProjectOne {
                                     && !contMoreThanTwo(sixNumbers) && !moreThanTwoSameLast(sixNumbers)
                                     && !moreThanThreeInSameTen(sixNumbers)) {
                                     //Καλεί την μέθοδο για να το βάλει στο άρχειο.
-                                    printFile(outputFile, i, j, k, l, m, o, sixNumbers);
+                                    printFile(outputFile, sixNumbers);
                                 }
                             }
                         }
@@ -170,23 +182,17 @@ public class ProjectOne {
     /**
      * Εξάγει σε αρχείο τα δεδομένα που παίρνει απο την μέθοδο combination.
      * @param outputFile To εξαγώγημο αρχείο.
-     * @param i Δείκτες των for απο την combination.
-     * @param j             >>
-     * @param k             >>
-     * @param l             >>
-     * @param m             >>
-     * @param o             >>
      * @param array ο πίνακας με τους 6 ακεραίους που στέλνει η combination.
      */
-    private static void printFile(File outputFile, int i ,int j, int k ,int l, int m, int o, int[] array){
-        try(PrintStream ps = new PrintStream(outputFile)){
+    private static void printFile(File outputFile, int[] array){
+        try(PrintStream ps = new PrintStream(new FileOutputStream(outputFile, true))){
             ps.printf("%d\t%d\t%d\t%d\t%d\t%d\n",
-                    array[i],
-                    array[j],
-                    array[k],
-                    array[l],
-                    array[m],
-                    array[o]);
+                    array[0],
+                    array[1],
+                    array[2],
+                    array[3],
+                    array[4],
+                    array[5]);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
