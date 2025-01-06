@@ -22,13 +22,22 @@ public class ProjectThree {
                 if (line == null || line.isEmpty()) {
                     break; // Break if an empty or null line is appear
                 }
-                System.out.println(line); // Print what we read
+                //System.out.println(line); // Print what we read
 
                 // καλούμε αυτήν την μέθοδο για να δημιουργήσουμε τον πίνακα με τους χαρακτήρες.
                 fillCharInventor(line, charInventor);
             }
 
+            //Κάνουμε ταξινόμηση βάση χαρακτήρα( στήλη 1η (0))
+            sortByColumn(charInventor,0,2, false);
+            System.out.println("Στατιστικά βάση χαρακτήρα και συχνότητα εμφάνισης.");
+            System.out.println("Χαρακτήρας " + " Συχνότητα εμφάνισης");
             printCharInventor(charInventor);
+            //Κάνουμε ταξινόμηση βάση συχνότητας εμφάνισης.(στήλη 2η (1))
+            sortByColumn(charInventor, 1 ,2, true );
+            System.out.println("Στατιστικά βάση συχνότητας εμφάνισης και χαρακτήρα.");
+            System.out.println("Συχνότητα εμφάνισης " + " Χαρακτήρας" );
+            printInvCharInventor(charInventor);
 
         } catch (IOException e){
             System.out.println("Error reading the file: " + e.getMessage());
@@ -89,13 +98,26 @@ public class ProjectThree {
 
     private static void printCharInventor(String[][] charInventor) {
         //System.out.println();
-        System.out.println("Table character Statistic");
+        //System.out.println("Table character Statistic");
 
             for (String[] row : charInventor) {
                 if (row[0] != null) {
-                    System.out.println(row[0] + "->" + row[1]);
+                    System.out.println("       " + row[0] + "   ->       " + row[1]);
                 }
             }
+
+    }
+
+    //Αυτήν η μέθοδος εκτυπώνει πρώτα την συχνότητα εμφάνισης και μετά τους χαρακτήρες.
+    private static void printInvCharInventor(String[][] charInventor) {
+        //System.out.println();
+        //System.out.println("Table character Statistic");
+
+        for (String[] row : charInventor) {
+            if (row[0] != null) {
+                System.out.println("       " + row[1] + "      ->       " + row[0]);
+            }
+        }
 
     }
 
@@ -104,14 +126,24 @@ public class ProjectThree {
      * @param array ο πίνακας που θέλουμε να ταξινομήσουμε.
      * @param col Η στήλη με βάση την οποία θέλουμε να γίνει η ταξινόμηση.
      * @param numOfCol ο αριθμός των στήλων που περιέχει ο πίνακας. (βασικά αυτό κάποια στιγμή θα το κάνω μεσα στην μέθοδο αυτόματα)
+     * @param isOnlyNum True αν είναι η στήλη που θέλουμε να ταξινομήσουμε μόνο αριθμοί.
      */
-    public static void sortByColumn(String[][] array, int col, int numOfCol){
+    public static void sortByColumn(String[][] array, int col, int numOfCol, boolean isOnlyNum){
         for(int i = array.length - 1; i > 0; i--){
             for(int j = 0; j < i; j++){
-                if (array[j][col] != null && array[j+1][col] != null
-                    && array[j][col].compareTo(array[j+1][col]) > 0 ){
-                    for( int k = 0; k < numOfCol; k++){
-                        swapTwoDTable(i, j, k, array);
+                if (array[j][col] != null && array[j+1][col] != null){
+                    boolean canSwap;
+                    if(isOnlyNum) {
+                        int num1 = Integer.parseInt(array[j][col]);
+                        int num2 = Integer.parseInt(array[j+1][col]);
+                        canSwap = num1 > num2;
+                    } else {
+                        canSwap = array[j][col].compareTo(array[j+1][col]) > 0;
+                    }
+                    if (canSwap) {
+                        for (int k = 0; k < numOfCol; k++) {
+                            swapTwoDTable(j, j + 1, k, array);
+                        }
                     }
                 }
             }
