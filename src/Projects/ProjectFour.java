@@ -1,5 +1,13 @@
 package Projects;
 
+/**
+ *  Αυτό το προγραμματάκι είναι ένα παιχνίδι Τρίλιζα.
+ *  Ελέγχει την σειρά των παιχτών, ελέγχει την είσοδο των τιμών
+ *  και να μην μπορεί να επιλέξει ήδη πιασμένο κουτί κάποιος παίχτης.
+ *
+ */
+
+import java.util.InputMismatchException;
 import java.util.Scanner;
 public class ProjectFour {
     public static void main(String[] args) {
@@ -9,7 +17,8 @@ public class ProjectFour {
         int choose1 = -1;
         int choose2 = -1;
         String[][] trilizaTable = new String[3][3];
-        boolean isWinner = false;
+        //boolean isWinner = false;
+        Scanner cs1 = new Scanner(System.in);
 
         for (int i = 0; i < trilizaTable.length; i++) {
             for (int j = 0; j < trilizaTable.length; j++) {
@@ -32,28 +41,29 @@ public class ProjectFour {
             int count = 0;
             while (true){
                 count++;
+                //System.out.println("count is: " + count); //Debug print
                 if ((count % 2) != 0) {
                     do {
                         System.out.println("Παίχτη 1 διάλεξε γραμμή απο 0 εώς 2");
                         choose1 = sc.nextInt();
                     } while (choose1 < 0 || choose1 > 2);
                     do {
-                        System.out.println("Παίχτη 1 διάλεξε στύλη απο 0 εώς 2");
+                        System.out.println("Παίχτη 1 διάλεξε στήλη απο 0 εώς 2");
                         choose2 = sc.nextInt();
                     } while (choose2 < 0 || choose2 > 2);
 
-                    importIn(choose1, choose2, player1, trilizaTable);
-
-                    if (count > 10) {
-                        System.out.println("The game over with drew");
-                        break;
-                    }
+                    importIn(choose1, choose2, player1, trilizaTable, cs1);
 
                     if (count > 4){
                         if (isTriliza(choose1,choose2, player1, trilizaTable)){
-                            System.out.println("Player 1 is the Winner");
+                            System.out.println("Ο παίχτης 1 είναι ο νικητής!");
                             break;
                         }
+                    }
+
+                    if (count >= 9) {
+                        System.out.println("Το παιχνίδι τελείωσε με ισοπαλία!");
+                        break;
                     }
                 } else {
 
@@ -62,20 +72,22 @@ public class ProjectFour {
                         choose1 = sc.nextInt();
                     } while (choose1 < 0 || choose1 > 2);
                     do {
-                        System.out.println("Παίχτη 2 διάλεξε στύλη απο 0 εώς 2");
+                        System.out.println("Παίχτη 2 διάλεξε στήλη απο 0 εώς 2");
                         choose2 = sc.nextInt();
                     } while (choose2 < 0 || choose2 > 2);
-                    importIn(choose1, choose2, player2, trilizaTable);
-                    if (count > 10) {
-                        System.out.println("The game over with drew");
-                        break;
-                    }
+                    importIn(choose1, choose2, player2, trilizaTable, cs1);
 
-                    if (count > 4){
+                    if (count > 4){ //Δεν υπάρχει λόγος να γίνεται έλεγχος αν δεν έχουν παίξει τουλάχιστον
+                        // 2 φορές ο καθένας.
                         if (isTriliza(choose1,choose2, player2, trilizaTable)){
-                            System.out.println("Player 2 is the Winner");
+                            System.out.println("Ο παίχτης 2 είναι ο νικητής!");
                             break;
                         }
+                    }
+
+                    if (count >= 9) {
+                        System.out.println("Το παιχνίδι τελείωσε με ισοπαλία!");
+                        break;
                     }
                 }
 
@@ -83,42 +95,65 @@ public class ProjectFour {
 
                 //Εκτύπωση του πίνακα της τρίλιζα
                 for (String[] row : trilizaTable ) {
+                    System.out.print("| ");
                     for (String col : row){
-                        System.out.print(col + "|");
+                        System.out.print(col + " | ");
                     }
                     System.out.println();
-                    System.out.println("-----------");
+                    System.out.println("-------------");
                 }
 
             }
         } catch (NumberFormatException e){
             System.err.println("Εισάγετε έναν ακέραιο μεταξύ 0 εώς 2");
         }
+
+        cs1.close(); // Κλείνω τον σκάνερ με εντολή για σιγουριά γιατί είναι εκτός try & catch.
     }
 
-    private static void importIn(int chooseA, int chooseB, String player, String[][] trilizaTable) {
-        if(trilizaTable[chooseA][chooseB] == " "){
+    /**
+     * Αυτήν η μέθοδος δημιουργεί το σχήμα του παιχνιδιού εισάγωντας της επιλογές
+     * απο τους παίχτες. Κάνει έλεγχο τιμών και έλεγχο ότι κάποιος δεν θα πατήσει πάνω
+     * σε πιασμένη θέση.
+     * @param chooseA Επιλογή για την γραμμή.
+     * @param chooseB Επιλογή για την στήλη.
+     * @param player Το σύμβολο του παίχτη.
+     * @param trilizaTable Ο πίνακς
+     * @param cs Βάζω τον σκάνερ cs1 γιατί όταν έμπενε στο else αφού εκανε την δουλειά
+     *           μετά έπιανε στο catch σφάλμα που είχε να κάνει με το σκάνερ και ετσι λύθηκε
+     *           το πρόβλημα.
+     */
+    private static void importIn(int chooseA, int chooseB, String player, String[][] trilizaTable, Scanner cs) {
+        Scanner sc = new Scanner(System.in);
+        if(trilizaTable[chooseA][chooseB].equals(" ")){
             trilizaTable[chooseA][chooseB] = player;
         } else {
             System.out.println("This place have: " + trilizaTable[chooseA][chooseB]);
 
-            try(Scanner sc = new Scanner(System.in)) {
-                int choose1 = -1;
-                int choose2 = -1;
-                do {
-                    System.out.println("Διάλεξε στύλη απο 0 εώς 2");
-                    choose1 = sc.nextInt();
-                } while (choose1 < 0 || choose1 > 2);
-                do {
-                    System.out.println("Διάλεξε γραμμή απο 0 εώς 2");
-                    choose2 = sc.nextInt();
-                } while (choose2 < 0 || choose2 > 2);
-                sc.nextLine(); // κάνω ένα καθαρισμό γιατί μου βγάζει bugs διαφορετικά.
-                importIn(choose1,choose2, player, trilizaTable);
-            } catch (NumberFormatException e) {
-                System.err.println(e.getMessage());
-                throw e;
-            }
+            int choose1 = -1;
+            int choose2 = -1;
+
+                try{
+
+                    do {
+                        System.out.println("Διάλεξε γραμμή απο 0 εώς 2");
+                        choose1 = sc.nextInt();
+                    } while (choose1 < 0 || choose1 > 2);
+
+                    do {
+                        System.out.println("Διάλεξε στήλη απο 0 εώς 2");
+                        choose2 = sc.nextInt();
+                    } while (choose2 < 0 || choose2 > 2);
+
+                    sc.nextLine();
+
+                } catch(InputMismatchException e){
+                    System.err.println("Μή έγκυρη τιμή! Βάλτε μόνο ακέραια νούμερα. ");
+                    throw e;
+                }
+
+            // Η μέθοδος ξανακαλεί τον εαυτό της για να μπούν τα καινούργια δεδομένα.
+            importIn(choose1, choose2, player, trilizaTable, cs);
         }
     }
 
